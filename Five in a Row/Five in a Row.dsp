@@ -89,6 +89,10 @@ SOURCE=.\execute.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\initialize.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\judge.c
 # End Source File
 # Begin Source File

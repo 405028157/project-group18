@@ -1,38 +1,41 @@
 #include <stdio.h>
+#include <windows.h>
 #include "function.h"
 
 extern int Chess[M][N];
-extern int Round;
-extern int Winner;
 extern struct coordinate Position;
+extern int Turn;
+extern int Winner;
+extern int Win1, Win2;
+extern int Round;
 
 void execute()//定义执行游戏程序循环的函数
 {
-	int r, c;
-	for(r = 0; r < M; r ++)
-		for(c = 0; c < M; c ++)
-			Chess[r][c] = 0;//棋盘归零
-	Position.r = (M - 1) / 2;
-	Position.c = (N - 1) / 2;//鼠标位置归中
-	Round = 0;//回合数归零
-	print();//首次显示棋盘
-	while(Round < (M - 1) * (N - 1))//当棋盘未满时，执行游戏程序循环。
+	while(Turn < (M - 1) * (N - 1) + Round % 2)//当棋盘未满时，执行游戏程序循环。
 	{
-		Position = place();//落子
-		while(Chess[Position.r][Position.c] != 0)//棋子下错位置
+		place();//落子
+		while(Chess[Position.R][Position.C] != 0)//棋子下错位置
 		{
 			Winner = 4;
 			print();//刷新棋盘，提示玩家下错位置。
-			Position = place();//重新落子
+			place();//重新落子
 		}
-		if(Round%2 == 0)
-			Chess[Position.r][Position.c] = 1;
+		if(Turn % 2 == 0)
+			Chess[Position.R][Position.C] = 1;
 		else
-			Chess[Position.r][Position.c] = 2;//棋盘数组存储落子信息
-		Round ++;//回合数加一
+			Chess[Position.R][Position.C] = 2;
+		/*棋盘数组存储落子信息*/
+		Turn ++;//轮数加一
 		judge();//判断胜负
 		print();//落子后刷新棋盘
-		if(Winner != 0 || (Winner == 0 && Round == (M - 1) * (N - 1)))
+		if(Winner != 0 || (Winner == 0 && Turn == (M - 1) * (N - 1)))
 			break;//若分出胜负或下满棋盘后，跳出游戏程序循环。
 	}
+	if(Winner == 1)
+		Win1 ++;
+	if(Winner == 2)
+		Win2 ++;
+	/*累积计算各玩家获胜回合数*/
+	Round ++;//回合数加一
+	system("pause");
 }

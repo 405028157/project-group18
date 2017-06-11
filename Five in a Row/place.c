@@ -4,10 +4,12 @@
 #include "function.h"
 
 extern struct coordinate Position;
+extern char Direction;
 
-struct coordinate place()//定义落子函数
+void place()//定义落子函数
 {
-	int input;//定义存储键盘输入的变量
+	int input;//声明存储键盘输入的变量
+	Direction = 'o';
 	do//输入的若不是空格键，执行循环。
 	{
 		input = getch();//键盘输入
@@ -16,32 +18,41 @@ struct coordinate place()//定义落子函数
 			input = getch();
 			switch(input)
 			{
-			case 0x50://鼠标下移
-				Position.r ++;
-				break;
 			case 0x48://鼠标上移
-				Position.r --;
+				Position.R --;
+				Direction = 'w';
 				break;
-			case 0x4D://鼠标右移
-				Position.c ++;
+			case 0x50://鼠标下移
+				Position.R ++;
+				Direction = 's';
 				break;
 			case 0x4B://鼠标左移
-				Position.c --;
+				Position.C --;
+				Direction = 'a';
+				break;
+			case 0x4D://鼠标右移
+				Position.C ++;
+				Direction = 'd';
 				break;
 			}
-			if(Position.r<0)
-				Position.r=M-1;
-			if(Position.c<0)
-				Position.c=N-1;
-			if(Position.r>M-1)
-				Position.r=0;
-			if(Position.c>N-1)
-				Position.c=0;//若鼠标超出棋盘范围，则移动到对面。
-			print();//移动鼠标后刷新窗口
+			if(Position.R < 0)
+				Position.R = M - 1;
+			if(Position.C < 0)
+				Position.C = N - 1;
+			if(Position.R > M - 1)
+				Position.R = 0;
+			if(Position.C > N - 1)
+				Position.C = 0;
+			/*若鼠标超出棋盘范围，则移动到对面。*/
 		}
+		else
+			Direction = 'o';
+		print();//刷新窗口
 		if(input == 27)//输入Esc键
+		{
+			printf("      ");
 			exit(0);//退出程序
+		}
 	}
 	while(input != 0x20);//执行循环直到输入空格键
-	return Position;//确定落子位置
 }

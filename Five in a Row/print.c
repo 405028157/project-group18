@@ -4,9 +4,10 @@
 
 extern char User1[MAX], User2[MAX];
 extern int Chess[M][N];
-extern int Round;
-extern int Winner;
 extern struct coordinate Position;
+extern char Direction;
+extern int Turn;
+extern int Winner;
 
 void print()//定义显示棋盘的函数
 {
@@ -20,20 +21,40 @@ void print()//定义显示棋盘的函数
 			printf("   %d ", r + 1);
 		else
 			printf("  %d ", r + 1);//显示棋盘左方的数字
-		for(c = 0; c < N; c ++)//每一行的每一列元素
+		for(c = 0; c < N; c ++)//每一行的每一列上的位置
 		{
-			if((r == Position.r && c == Position.c) || Chess[r][c] != 0)//显示棋子或鼠标
+			if((r == Position.R && c == Position.C) || Chess[r][c] != 0)//有棋子或有鼠标的位置
 			{
-				if(Chess[r][c] != 0)//有棋子的地方显示棋子
+				if(Chess[r][c] != 0)
 				{
 					if(Chess[r][c] == 1)
 						printf("●");
 					else
 						printf("○");
 				}
+				/*有棋子的地方显示棋子*/
 				else
-					printf("↗");//无棋子有鼠标的地方显示鼠标
-				if(r == Position.r && c == Position.c && Chess[r][c] != 0)
+				{
+					switch(Direction)
+					{
+					case 'w':
+						printf("▲");
+						break;
+					case 's':
+						printf("▼");
+						break;
+					case 'a':
+						printf("《");
+						break;
+					case 'd':
+						printf("》");
+						break;
+					default:
+						printf("↗");
+					}
+				}
+				/*无棋子有鼠标的地方显示鼠标*/
+				if(r == Position.R && c == Position.C && Chess[r][c] != 0)
 					printf("』");//有棋子有鼠标的地方显示鼠标
 				else
 				{
@@ -43,7 +64,7 @@ void print()//定义显示棋盘的函数
 							printf("═");
 						else
 							printf("—");
-					}//有棋子无鼠标或无棋子有鼠标的地方显示列间间隔
+					}//有棋子无鼠标或无棋子有鼠标的地方显示列间隔
 				}
 			}
 			else//显示棋盘空位
@@ -80,10 +101,10 @@ void print()//定义显示棋盘的函数
 					switch(c)
 					{
 					case 0:
-						printf("║—");//显示棋盘左边界
+						printf("╟—");//显示棋盘左边界
 						break;
 					case N - 1:
-						printf("║");//显示棋盘右边界
+						printf("╢");//显示棋盘右边界
 						break;
 					default:
 						printf("┼—");//显示棋盘内空位
@@ -98,28 +119,29 @@ void print()//定义显示棋盘的函数
 			break;
 		}
 		else
-			printf("     ║  │  │  │  │  │  │  │  │  │  │  │  │  │  ║\n");//显示行间间隔
+			printf("     ║  │  │  │  │  │  │  │  │  │  │  │  │  │  ║\n");//不是最后一行，显示行间隔。
 	}
 	printf("——————————————————————————————————");
 	switch(Winner)
 	{
 	case 1:
-		printf("      Player %s wins! \n", User1);//玩家1获胜
+		printf("         Player %s wins! \n\n         ", User1);//玩家1获胜
 		break;
 	case 2:
-		printf("      Player %s wins! \n", User2);//玩家2获胜
+		printf("         Player %s wins! \n\n         ", User2);//玩家2获胜
 		break;
 	case 3:
-		printf("      The chess game ends in a tie. \n");//和棋
+		printf("         The chess game ends in a tie. \n\n         ");//和棋
 		break;
 	case 4:
 		printf("      Error! The location is invalid! \n");//提示棋子下错位置
 		Winner = 0;
 	case 0:
-		if(Round % 2 == 0)
+		if(Turn % 2 == 0)
 			printf("      Player %s, please input the position of chess piece. \n", User1);
 		else
-			printf("      Player %s, please input the position of chess piece. \n", User2);//提示玩家落子
+			printf("      Player %s, please input the position of chess piece. \n", User2);
+		/*提示玩家落子*/
 		break;
 	}
 }
